@@ -7,6 +7,10 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import BestBooks from './BestBooks';
+import Profile from './Profile';
+import Login from './Login';
+import LogoutButton from './LogoutButton';
 
 class App extends React.Component {
 
@@ -19,7 +23,7 @@ class App extends React.Component {
 
   loginHandler = (user) => {
     this.setState({
-      user,
+      user: user
     })
   }
 
@@ -27,6 +31,7 @@ class App extends React.Component {
     this.setState({
       user: null,
     })
+    console.log('button works')
   }
 
   render() {
@@ -35,10 +40,20 @@ class App extends React.Component {
         <Router>
           <Header user={this.state.user} onLogout={this.logoutHandler} />
           <Switch>
-            <Route exact path="/">
-              {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
+            <Route exact path="/BestBooks">
+              {this.state.user
+                ?
+                <BestBooks />
+                :
+                <Login loginHandler={this.loginHandler}/>
+              }
             </Route>
-            {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
+            <Route exact path="/Profile">
+              <Profile userInfo={this.state.user}/>
+            </Route>
+            <Route exact path="/LogoutButton">
+              <LogoutButton onLogout={this.logoutHandler}/>
+            </Route>
           </Switch>
           <Footer />
         </Router>

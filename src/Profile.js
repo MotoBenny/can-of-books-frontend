@@ -1,11 +1,21 @@
 import { Component } from "react";
+import { Card } from 'react-bootstrap';
 
 class Profile extends Component {
 
   render() {
-    /* TODO: render information about logged in user */
     /* STRETCH TODO: if no logged in user then redirect home */
-    return <p>Profile page coming soon</p>
+    return (
+      <Card style={{ width: '18rem' }}>
+        <Card.Body>
+          <Card.Title>Profile card</Card.Title>
+          <Card.Text>
+            {this.props.userInfo}
+          </Card.Text>
+
+        </Card.Body>
+      </Card>
+    )
   }
 };
 

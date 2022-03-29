@@ -27,25 +27,22 @@ class BestBooks extends React.Component {
 
   componentDidMount() {
     this.getBooks();
-    console.log('Calling getbooks');
-  } ;
+  };
 
   render() {
-
-    /* TODO: render user's books in a Carousel */
     let booksCarousel = this.state.books.map((book) => (
       <Carousel.Item key={book._id}>
         <h2>{book.title}</h2>
         <p>{book.description}</p>
-      <Carousel.Caption>
-        <h3>{book.author}</h3>
-      </Carousel.Caption>
+        <Carousel.Caption>
+          <h3>{book.author}</h3>
+        </Carousel.Caption>
       </Carousel.Item>
     ));
     return (
       <>
         <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
-        
+
         {this.state.books.length ? (
           <Container>
             <Carousel>
