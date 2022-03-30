@@ -1,0 +1,38 @@
+.carousel {
+  max-width: 30rem;
+  background-color: black;
+  margin: auto;
+  padding: 40px;
+  
+}
+.container {
+  display: flex;
+  height: 100%;
+  padding-bottom: 40px;
+  
+}
+
+.carousel h2 {
+  color: white;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.carousel p {
+  color: white;
+  padding: 30px;
+  justify-content: space-around;
+}
+
+/* .carousel h3 {
+  color: white;
+} */
+.carousel-caption{
+  color: blue;
+  
+}
+
+.bookOsel {
+  /* height: -125px; */
+  margin: 20px;
+}
