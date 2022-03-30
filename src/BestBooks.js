@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import { Carousel, Container } from 'react-bootstrap';
+import { Carousel, Container, Button } from 'react-bootstrap';
 import './BestBooks.css';
 import AddBook from './AddBook'
 import DeleteButton from './DeleteButton'
+import EditBookModal from './EditBookModal';
 
 let SERVER = process.env.REACT_APP_SERVER;
 
@@ -11,11 +12,11 @@ class BestBooks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      books: []
+      books: [],
+      modalDisplay: false
     }
   }
 
-  /* TODO: Make a GET request to your API to fetch books for the logged in user  */
   getBooks = async () => {
     try {
       let results = await axios.get(`${SERVER}/books?email=${this.props.user}`);
@@ -23,7 +24,7 @@ class BestBooks extends React.Component {
         books: results.data
       })
     } catch (error) {
-      console.log('We have ran into an error: ', error.response.data);
+      console.log('get book error: ', error.response.data);
     }
   };
 
@@ -34,8 +35,8 @@ class BestBooks extends React.Component {
       this.setState({
         books: [...this.state.books, newBook.data]
       })
-    } catch(error){
-      console.log('we have an error: ', error.response.data)
+    } catch (error) {
+      console.log('post book error: ', error.response.data)
     }
   }
 
@@ -48,13 +49,43 @@ class BestBooks extends React.Component {
       this.setState({
         books: updatedBooks
       });
-    } catch(error){
-      console.log('we have an error: ', error.response.data)
+    } catch (error) {
+      console.log('delete book error: ', error.response.data)
     }
   }
 
+  updateBook = async (bookToUpdate) => {  
+    try { 
+      let url = `${SERVER}/books/${bookToUpdate._id}`;
+      console.log(url);
+      let updatedBook = await axios.put(url, bookToUpdate); 
+      console.log(updatedBook)
+      let updatedBookData = this.state.books.map(existingBook => {
+        return existingBook._id === bookToUpdate._id
+          ? updatedBook.data
+          : existingBook; 
+      });
+      console.log(updatedBookData)
+      this.setState({ books: updatedBookData });  
+    } catch (error) {
+      console.error('update book error:', error.message);
+    };
+  }; 
+
   componentDidMount() {
     this.getBooks();
+  };
+
+  displayModal = () => {
+    this.setState({
+      modalDisplay: true,
+    });
+  };
+
+  hideModal = () => {
+    this.setState({
+      modalDisplay: false
+    });
   };
 
   render() {
@@ -65,7 +96,9 @@ class BestBooks extends React.Component {
         <Carousel.Caption className='bookOsel'>
           <h3>{book.author}</h3>
         </Carousel.Caption>
-        <DeleteButton id={book._id} deleteBook={this.deleteBook}/>
+        <DeleteButton id={book._id} deleteBook={this.deleteBook} />
+        <Button onClick={this.displayModal}>Edit a Book</Button>
+        <EditBookModal updateBook={this.updateBook} user={this.props.user} book={book} modalDisplay={this.state.modalDisplay} hideModal={this.hideModal} />
       </Carousel.Item>
     ));
     return (
@@ -76,12 +109,12 @@ class BestBooks extends React.Component {
             <Carousel>
               {booksCarousel}
             </Carousel>
-            <AddBook postBooks={this.postBooks} user={this.props.user}/>
+            <AddBook postBooks={this.postBooks} user={this.props.user} />
           </Container>
         ) : (
           <Container>
-          <h3>No Books Found :(</h3>
-          <AddBook postBooks={this.postBooks} user={this.props.user}/>
+            <h3>No Books Found :(</h3>
+            <AddBook postBooks={this.postBooks} user={this.props.user} />
           </Container>
         )}
       </>
