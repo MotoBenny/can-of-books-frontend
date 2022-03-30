@@ -7,18 +7,18 @@ class LoginForm extends Component {
     this.state = {
       user: null,
     }
-  }
+  };
 
   setEmailState = (e) => {
     this.setState({
       user: e.target.value
-    })
-  }
+    });
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.loginHandler(this.state.user);
-  }
+  };
 
   render() {
     return (
