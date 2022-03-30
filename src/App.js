@@ -43,7 +43,7 @@ class App extends React.Component {
             <Route exact path="/BestBooks">
               {this.state.user
                 ?
-                <BestBooks />
+                <BestBooks user={this.state.user}/>
                 :
                 <Login loginHandler={this.loginHandler}/>
               }
