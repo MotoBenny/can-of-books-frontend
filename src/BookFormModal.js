@@ -35,7 +35,7 @@ class BookFormModal extends Component {
       title: this.state.title,
       description: this.state.description,
       author: this.state.author,
-      email: this.props.user
+      email: this.props.user || 'email@email.com'
     })
   };
   
