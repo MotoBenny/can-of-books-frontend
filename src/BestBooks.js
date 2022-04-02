@@ -18,27 +18,39 @@ class BestBooks extends React.Component {
   }
 
   getBooks = async () => {
-    try {
-      let results = await axios.get(`${SERVER}/books?email=${this.props.user}`);
-      this.setState({
-        books: results.data
-      })
-    } catch (error) {
-      console.log('get book error: ', error.response.data);
+    if (this.props.auth0.isAuthenticated) {
+      const res = await this.props.auth0.getIdTokenClaims();
+      const jwt = res.__raw;
+      // console.log(jwt)
+      try {
+        const config = {
+          method: 'get',
+          baseURL: process.env.REACT_APP_SERVER,
+          url: '/books',
+          headers: { "Authorization": `Bearer ${jwt}` },
+          params: {email: 'email@email.com'}
+        };
+        const results = await axios(config);
+        this.setState({
+          books: results.data
+        })
+      } catch (error) {
+        console.log('get book error: ', error.response.data);
+      }
     }
   };
 
   postBooks = async (postedBook) => {
-    try {
-      let url = `${SERVER}/books`;
-      let newBook = await axios.post(url, postedBook);
-      this.setState({
-        books: [...this.state.books, newBook.data]
-      })
-    } catch (error) {
-      console.log('post book error: ', error.response.data)
+      try {
+        let url = `${SERVER}/books`;
+        let newBook = await axios.post(url, postedBook);
+        this.setState({
+          books: [...this.state.books, newBook.data]
+        })
+      } catch (error) {
+        console.log('post book error: ', error.response.data)
+      }
     }
-  }
 
   deleteBook = async (id) => {
     try {
@@ -54,23 +66,23 @@ class BestBooks extends React.Component {
     }
   }
 
-  updateBook = async (bookToUpdate) => {  
-    try { 
+  updateBook = async (bookToUpdate) => {
+    try {
       let url = `${SERVER}/books/${bookToUpdate._id}`;
       console.log(url);
-      let updatedBook = await axios.put(url, bookToUpdate); 
+      let updatedBook = await axios.put(url, bookToUpdate);
       console.log(updatedBook)
       let updatedBookData = this.state.books.map(existingBook => {
         return existingBook._id === bookToUpdate._id
           ? updatedBook.data
-          : existingBook; 
+          : existingBook;
       });
       console.log(updatedBookData)
-      this.setState({ books: updatedBookData });  
+      this.setState({ books: updatedBookData });
     } catch (error) {
       console.error('update book error:', error.message);
     };
-  }; 
+  };
 
   componentDidMount() {
     this.getBooks();
