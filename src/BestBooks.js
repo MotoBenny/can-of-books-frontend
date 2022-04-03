@@ -42,7 +42,6 @@ class BestBooks extends React.Component {
 
   deleteBook = async (id) => {
     try {
-      // maybe validation something?
       let url = `${SERVER}/books/${id}`;
       await axios.delete(url);
       let updatedBooks = this.state.books.filter(Book => Book._id !== id);
@@ -57,15 +56,12 @@ class BestBooks extends React.Component {
   updateBook = async (bookToUpdate) => {  
     try { 
       let url = `${SERVER}/books/${bookToUpdate._id}`;
-      console.log(url);
       let updatedBook = await axios.put(url, bookToUpdate); 
-      console.log(updatedBook)
       let updatedBookData = this.state.books.map(existingBook => {
         return existingBook._id === bookToUpdate._id
           ? updatedBook.data
           : existingBook; 
       });
-      console.log(updatedBookData)
       this.setState({ books: updatedBookData });  
     } catch (error) {
       console.error('update book error:', error.message);
